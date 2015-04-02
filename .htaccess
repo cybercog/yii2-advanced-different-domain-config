@@ -1,0 +1,99 @@
+#Options FollowSymLinks
+AddDefaultCharset utf-8
+
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+
+    ## jiao.cn/
+    # the main rewrite rule for the jiao.cn/ frontend application
+    RewriteCond %{HTTP_HOST} ^jiao.cn
+    RewriteCond %{REQUEST_URI} !^/(jiao-backend/web|manage)
+    RewriteRule !^jiao-frontend/web /jiao-frontend/web%{REQUEST_URI} [L]
+    # if a directory or a file of the frontend application exists, use the request directly
+    RewriteCond %{HTTP_HOST} ^jiao.cn
+    RewriteCond %{REQUEST_URI} ^/jiao-frontend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # otherwise forward the request to index.php to load the controller
+    RewriteRule . /jiao-frontend/web/index.php [L]
+
+    ## jiao.cn/manage
+    # the main rewrite rule for the jiao.cn/manage/ frontend application
+    RewriteCond %{HTTP_HOST} ^jiao.cn
+    RewriteCond %{REQUEST_URI} ^/manage
+    RewriteRule ^manage(.*) /jiao-backend/web$1 [L]
+    # if a directory or a file of the frontend application exists, use the request directly
+    RewriteCond %{HTTP_HOST} ^jiao.cn
+    RewriteCond %{REQUEST_URI} ^/jiao-backend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # otherwise forward the request to index.php to load the controller
+    RewriteRule . /jiao-backend/web/index.php [L]
+
+    ## prefix.jiao.cn/
+    # prefix.jiao.cn frontend
+    RewriteCond %{HTTP_HOST} ^.*.jiao.cn
+    RewriteCond %{REQUEST_URI} !^/(school-backend/web|manage)
+    RewriteRule !^school-frontend/web /school-frontend/web%{REQUEST_URI} [L]
+    # prefix.jiao.cn frontend resource
+    RewriteCond %{HTTP_HOST} ^.*.jiao.cn
+    RewriteCond %{REQUEST_URI} ^/school-frontend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /school-frontend/web/index.php [L]
+
+    ## prefix.jiao.cn/manage
+    # prefix.jiao.cn/manage backend
+    RewriteCond %{HTTP_HOST} ^.*.jiao.cn
+    RewriteCond %{REQUEST_URI} ^/manage
+    RewriteRule ^manage(.*) /school-backend/web$1 [L]
+    # prefix.jiao.cn frontend resource
+    RewriteCond %{HTTP_HOST} ^.*.jiao.cn
+    RewriteCond %{REQUEST_URI} ^/school-backend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /school-backend/web/index.php [L]
+
+
+
+    ## xue.cn
+    # xue.cn frontend
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_URI} !^/(xue-backend/web|manage|school)
+    RewriteRule !^xue-frontend/web /xue-frontend/web%{REQUEST_URI} [L]
+    
+    # xue.cn frontend resource
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_URI} ^/xue-frontend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /xue-frontend/web/index.php [L]
+
+    ## xue.cn/manage backend
+    # xue.cn/manage backend
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_URI} ^/manage
+    RewriteRule ^manage(.*) /xue-backend/web$1 [L]
+
+    # xue.cn/manage resource
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_URI} ^/xue-backend/web
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /xue-backend/web/index.php [L]
+
+
+    ## xue.cn/school/a
+    # xue.cn/school/a school frontend
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_URI} ^/school/(.*)/
+    RewriteRule ^school/([a-z0-9]*)/(.*) /school-frontend/web/$2 [L]
+    
+    # xue.cn/school/a resource load
+    RewriteCond %{HTTP_HOST} ^xue.cn
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /school-frontend/web/index.php [L]
+    
+</IfModule>
